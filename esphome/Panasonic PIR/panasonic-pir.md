@@ -20,7 +20,7 @@ Note: Make sure you use 3.3V input on the PaPir, in order to avoid damage to the
 
 ### Steps
 
-### Powering your Sensor
+#### Powering your Sensor
 - Use either 5V or 3.3V connectors with D1 Mini
 - With a D1 Mini, it is recomended to power the system through D1 Mini's USB port. 
 - Connect the **PaPIR only from 3V** (from the D1 Mini), so that its output signal will remain within the 3V tolerance
@@ -33,12 +33,12 @@ Note: Make sure you use 3.3V input on the PaPir, in order to avoid damage to the
 ![Panasonic PIR Circuit Diagram](../Panasonic%20PIR/images/papir-circuit-diagram.png "Panasonic PIR Circuit Diagram")
 
 
-### ESPHome Configuration
+#### ESPHome Configuration
 
 - This configuration makes use of the pinmode ``INPUT_PULLDOWN_16``, which is a special pulldown mode used with D0 (GPIO16) on ESP8266 chips.
 - The configuration adds a 20 second delay in reporting a clear since for usability purposes. You can delete this, increase, or decrease the delay as per your needs
 
-#### *ESPHome YAML*
+##### *ESPHome YAML*
 ```
 binary_sensor:
   - platform: gpio
