@@ -34,10 +34,26 @@ Syntax highlighted code block
 
 For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 
-### Jekyll Themes
+## Creating a new tutorial
+A quick how-to for writing a new tutorial. 
+- Step 1: Find the appropriate subdirectory to place it, create one if it doesn't exist already (see instructions below).
+- Step 2: If you have multiple resources for a tutorial (eg images, videos, YAML files), then create a folder for the same. You will create a markdown file in this folder. If the above isn't hold, you can just create a new file in the parent folder.
+- Step 3: Create the documentation using markdown. 
+- Step 4: Linking the doc in the navigation bar. Add the following to the top of your file. You can find the <ParentName> by going to the directory and looking for `index.md` file.
+```
+---
+parent: <ParentNameGoesHere>
+---
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/home-automation-india/home-automation-india.github.io/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Creating a new Parent
+Create a new parent if you don't find any meaningful grouping to add your tutorial to. 
+- Step 1: Create a root directory for the parent. eg: create a directory called `linux`
+- Step 2: Create `index.md` within the parent with the following content
 
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+```
+---
+has_children: true
+title: <MeaningfulNameHere>
+---
+```
