@@ -1,4 +1,4 @@
-## Building a reliable PIR system with ESPHome and Panasonic PIR
+## Building a reliable PIR Sensor with ESPHome and Panasonic PIR
 
 This guide explains how to build a pir sensor with a highly reliable Panasonic PIR sensors. 
 
