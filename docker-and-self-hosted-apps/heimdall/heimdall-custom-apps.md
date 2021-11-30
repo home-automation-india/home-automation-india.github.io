@@ -2,17 +2,33 @@
 parent: Docker
 ---
 
-# How to add custom apps to Heimdall, using proper methods
+# How to add custom apps to Heimdall - The proper method
 
-Heimdall is a self-hosted personal dashboad. This guide is only applicable to the docker installation. You may adapt the steps in a normal installation too. 
+## What is Heimdall?
 
-The official installation offers a handful of apps for the dashboard, but there are numerous more, developed by the community. These apps can be added by following this method.
+Heimdall is a self-hosted personal dashboard. It acts as a dashboard that hosts links to all your self-hosted, or online apps and app instances. See the screenshot bellow to get an idea.
+
+
+![Heimdall Screenshot](../heimdall/images/heimdall-screenie.jpg "Heimdall Screenshot")
+
+
+## Why Do You Need This?
+
+Heimdall comes preloaded with many foundation and enhanced apps. However, one may find that not all apps are there. Not to worry. There is a huge community supporting ongoing development of Heimdall, and some of them have been kind enough to make their own versions of apps, which are not available in Heimdall out of the box. We can easily make them available in Heimdall with a few lines of commands
+
+
+
+***NOTE:** This guide is only applicable to the docker installation. You may adapt the steps in a normal installation too.*
+
+
+
+The official installation offers many apps for the dashboard, but there are numerous more, developed by the community. These apps can be added by following this method.
 
 [Heimdall Home Page](https://heimdall.site/)
 
 For this guide, I will use the example of Omada SDN Controller.
 
-First, go to [Heimdall Request List](https://apps.heimdall.site/request/list) and check if the desired app is available in the page. 
+First, go to [Heimdall App Request List](https://apps.heimdall.site/request/list) and check if the desired app is available in the page. 
 
 ***NOTE**: Only apps made avaiable in this page can be used with this method.*
 
