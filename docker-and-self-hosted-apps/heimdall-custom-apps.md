@@ -8,7 +8,7 @@ The official installation offers a handful of apps for the dashboard, but there 
 
 For this guide, I will use the example of Omada SDN Controller.
 
-First, go to (https://apps.heimdall.site/request/list) and check if the desired app is available in the page. 
+First, go to [Heimdall Request List](https://apps.heimdall.site/request/list) and check if the desired app is available in the page. 
 
 ***NOTE**: Only apps made avaiable in this page can be used with this method.*
 
