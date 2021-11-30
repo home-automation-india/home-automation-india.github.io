@@ -57,6 +57,7 @@ binary_sensor:
 ### Trouble Shooting
 - The Panasonic PIR Sensor implementation is pretty straight forward
 - If you have problems connecting with the sensor, double check connections and pins. 
-- The pin with plated or covered/sealed base is GND
-- Double check if VCC and Signal/OUT is switched
+- Sensor pin with plated or covered/sealed base is GND
+- Double check if Sensor's VCC and Signal/OUT is switched
+- ``INPUT_PULLDOWN_16`` only works with GPIO16, or D0
 
