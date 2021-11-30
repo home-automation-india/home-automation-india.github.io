@@ -1,14 +1,1 @@
 remote_theme: pmarsceill/just-the-docs
-collections:
-  esphome:
-    output: true
-  docker:
-    output: true
-
-just_the_docs:
-  collections:
-    esphome:
-      name: Documentation
-    docker:
-      name: Tutorials
-
