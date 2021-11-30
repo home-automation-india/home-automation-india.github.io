@@ -7,7 +7,7 @@ title: ESPHome PaPIR
 
 This guide explains how to build a pir sensor with a highly reliable Panasonic PIR sensors. 
 
-[This is an example sensor used throughout this guide:](https://robu.in/product/panasonic-pir-passive-infrared-motion-sensor/)
+[This is an example sensor used throughout this guide:](https://robu.in/product/panasonic-pir-passive-infrared-motion-sensor/){:target="_blank"}
 
 Note: Make sure you use 3.3V input on the PaPir, in order to avoid damage to the D1 Mini
 
