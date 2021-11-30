@@ -1,4 +1,10 @@
-## Welcome to GitHub Pages
+---
+layout: default
+title: Home
+nav_order: 1
+---
+
+## Welcome to Home automation India resources
 
 You can use the [editor on GitHub](https://github.com/home-automation-india/home-automation-india.github.io/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
 

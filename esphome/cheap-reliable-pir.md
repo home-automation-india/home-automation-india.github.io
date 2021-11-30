@@ -1,3 +1,7 @@
+---
+title: ESPHome PIR HC SR501
+parent: ESPHome
+---
 ## Building a cheap and reliable PIR system with ESPHome
 This guide explains how to build a powered WiFi PIR system in your house. If you are looking to build a battery powered system, then WiFi is probably the wrong choice and you should look elsewhere.
 
