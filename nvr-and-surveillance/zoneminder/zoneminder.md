@@ -65,6 +65,7 @@ The above config is sufficient to receive notifications on ZMNinja. Notification
 - Install the library `perl -MCPAN -e "install Net::MQTT::Simple"`. You might see an error saying `make not found`, you might need to install it first using `apt install make`
 - Enable MQTT in the configuration file: [Reference documentation](https://zmeventnotification.readthedocs.io/en/latest/guides/es_faq.html#how-can-i-use-this-with-node-red-or-home-assistant)
 - Now you can create sensors using the MQTT information publised by ZoneMinder. For instance, create a Motion detection sensor using 
+- 
 ```
 binary_sensor:
   - platform: mqtt
