@@ -42,15 +42,15 @@ It is used to configure our proxy through Docker labels.
 
 Since Docker provider does not support proxying external URLs we are using file provider.
 
-
 ## Prerequisite
 
  - A Mechine with `docker` and `docker-compose` installed
  - Cloudflare account (Optional).
  - Portainer (Optional)
+ - Running Home Assistant Docker stack
  - Lots of patience
 
-### My setup
+## My setup
 
  - Raspberry Pi 4 - 4G running [DietPi](https://dietpi.com/)
  - WD Green 240 GB SSD Connected [Amazon](https://www.amazon.in/Western-Digital-WDS240G2G0A-240GB-Internal/dp/B076Y374ZH)
@@ -59,9 +59,18 @@ Since Docker provider does not support proxying external URLs we are using file 
 
 # Installation 
 
-My storage locatio  is `/mnt/dietpi_userdata/traefik`
+My storage location will be `/mnt/dietpi_userdata/traefik`
 
-The domain I will be using is lan.ha-india.com
+The domain I will be using is `lan.siddhu.dev`
+## Get CloudFlare token
+
+Login to CloudFlare
+
+ - Click on the User Icon on the right top.
+ - Navigate to `API Tokens`.
+ - Click on `Vew` next to `Global API Key`.
+ - Complete captcha if shown.
+ - Copy the key to use with stack below.
 
 ## Create a dedicated network for connecting all containers and stacks
 
@@ -76,17 +85,17 @@ You can create a network in Portainer from `Networks -> Add Network`, Select Dri
 
 Important Notes:
 
- - The Traefik itself will be using `traefik.lan.ha-india.com` domain .
+ - The Traefik itself will be using `traefik.lan.siddhu.dev` domain .
 
  - Traefik requires you to define "Certificate Resolvers" in the configuration, which is responsible for retrieving certificates from an ACME server.
 
  - We will be using the resolver name `letsencrypt`, just a name you can use anything.
 
- - The configuration below is used to create a wildcard cert for all domains under `lan.ha-india.com` since LetsEncrypt comes with [rate limits](https://letsencrypt.org/docs/rate-limits/) .
+ - The configuration below is used to create a wildcard cert for all domains under `lan.siddhu.dev` since LetsEncrypt comes with [rate limits](https://letsencrypt.org/docs/rate-limits/) .
 
 ```
-      - 'traefik.http.routers.traefik.tls.domains[0].main=lan.ha-india.com'
-      - 'traefik.http.routers.traefik.tls.domains[0].sans=*.lan.ha-india.com'
+      - 'traefik.http.routers.traefik.tls.domains[0].main=lan.siddhu.dev'
+      - 'traefik.http.routers.traefik.tls.domains[0].sans=*.lan.siddhu.dev'
 ```
 
 - In Dynamic Configuration `local-ip` should be replaced with your Raspberry Pi / VM IP, this once is used for proxying all the devices running in the docker `host` network. All docker containers are configured through the Portainer itself.
@@ -140,7 +149,7 @@ http:
   routers:
 
     esphome:
-      rule: "Host(`esphome.lan.ha-india.com`)"
+      rule: "Host(`esphome.lan.siddhu.dev`)"
       service: esphome-service
       priority: 1000
       tls:
@@ -149,7 +158,7 @@ http:
         - websecure
 
     homeassistant:
-      rule: "Host(`ha.lan.ha-india.com`)"
+      rule: "Host(`ha.lan.siddhu.dev`)"
       service: homeassistant-service
       priority: 1000
       tls:
@@ -183,12 +192,12 @@ services:
     container_name: "traefik"
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.traefik.rule=Host(`traefik.lan.ha-india.com`)'
+      - 'traefik.http.routers.traefik.rule=Host(`traefik.lan.siddhu.dev`)'
       - 'traefik.http.routers.traefik.entrypoints=websecure'
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - 'traefik.http.routers.traefik.tls=true'
-      - 'traefik.http.routers.traefik.tls.domains[0].main=lan.ha-india.com'
-      - 'traefik.http.routers.traefik.tls.domains[0].sans=*.lan.ha-india.com'
+      - 'traefik.http.routers.traefik.tls.domains[0].main=lan.siddhu.dev'
+      - 'traefik.http.routers.traefik.tls.domains[0].sans=*.lan.siddhu.dev'
       - 'traefik.http.services.traefik.loadbalancer.server.port=8080'
       - "traefik.docker.network=traefik-public"
     environment:
@@ -209,7 +218,284 @@ services:
 networks:
   traefik-public:
     external: true
-  traefik-swarm:
-    external: true
-    
 ```
+
+## Check with browser
+
+Open the url traefik.lan.siddhu.dev in browser, it may throw SSL error for few minutes. If it happends try after 1 or 2 minutes.
+
+![Traefik Dashboard](images/traefik-dash-1.jpg)
+
+If everything goes well procced to next step
+
+# Adding Authelia
+
+Authelia configs will be stored at `/mnt/dietpi_userdata/Authelia/config`
+
+Here we are creating 2 middlwares 
+ - authelia
+ - authelia-basic
+
+`authelia` will be used for normal GUI auth.
+
+`authelia-basic` will use used for http auth (The good old login prompt).
+
+## Installtion
+
+`mkdir -p /mnt/dietpi_userdata/Authelia/config`
+
+Create configuration file `nano /mnt/dietpi_userdata/Authelia/config/configuration.yml`
+
+```
+##############################################################################
+#                   Authelia configuration  thehomelab.wiki                  #
+##############################################################################
+
+log:
+  level: info
+jwt_secret: 2cCBR773wDpe45FPCPmgB # replace this
+default_redirection_url: https://login.lan.siddhu.dev
+totp:
+  issuer: siddhu.dev
+  period: 30
+  skew: 1
+
+#duo_api:     ## If you want push notifictions of login attempts you can pay for this feature
+#  hostname: api-123456789.example.com
+#  integration_key: ABCDEF
+#  secret_key: yet-another-long-string-of-characters-and-numbers-and-symbols
+
+server:
+  ## The address to listen on.
+  host: 0.0.0.0
+
+  ## The port to listen on.
+  port: 9091
+
+  ## Set the single level path Authelia listens on.
+  ## Must be alphanumeric chars and should not contain any slashes.
+  path: ""
+
+  ## Buffers usually should be configured to be the same value.
+  ## Explanation at https://www.authelia.com/docs/configuration/server.html
+  ## Read buffer size adjusts the server's max incoming request size in bytes.
+  ## Write buffer size does the same for outgoing responses.
+  read_buffer_size: 4096
+  write_buffer_size: 4096
+
+  ## Enables the pprof endpoint.
+  enable_pprof: false
+
+  ## Enables the expvars endpoint.
+  enable_expvars: false
+
+  ## Disables writing the health check vars to /app/.healthcheck.env which makes healthcheck.sh return exit code 0.
+  ## This is disabled by default if either /app/.healthcheck.env or /app/healthcheck.sh do not exist.
+  disable_healthcheck: false
+
+  ## Authelia by default doesn't accept TLS communication on the server port. This section overrides this behaviour.
+  tls:
+    ## The path to the DER base64/PEM format private key.
+    key: ""
+
+    ## The path to t
+
+authentication_backend:
+  disable_reset_password: false
+  file:
+    path: /config/users_database.yml # Make sure this file exists
+    password:
+      algorithm: argon2id
+      iterations: 1
+      salt_length: 16
+      parallelism: 8
+      memory: 64
+
+access_control:
+  default_policy: deny
+  rules:
+    # Rules applied to everyone
+    - domain:
+        - "login.lan.siddhu.dev"
+      policy: bypass
+    - domain: # Proxies only requiring username and password
+        - "*.lan.siddhu.dev"
+      policy: one_factor
+    #      networks:
+    #        - 192.168.1.0/24
+#    - domain: # Proxies needing 2 factor below
+#        - "proxmox.yourdomain.com"
+#      policy: two_factor
+#      networks:
+#         - 192.168.1.0/24
+
+session:
+  name: authelia_session
+  # This secret can also be set using the env variables AUTHELIA_SESSION_SECRET_FILE
+  secret: l2b33jzfzvdvp2esrdhro7n40w # replace this
+  expiration: 3600 # 1 hour
+  inactivity: 7200 # 2 hours
+  domain: siddhu.dev # Needs to be your root domain
+
+  redis:
+    host: authelia_redis
+    port: 6379
+    # This secret can also be set using the env variables AUTHELIA_SESSION_REDIS_PASSWORD_FILE
+#    password: authelia
+
+regulation:
+  max_retries: 5
+  find_time: 2m
+  ban_time: 10m
+
+theme: dark # options: dark, light
+
+storage:
+  local:
+    path: /config/db.sqlite3
+
+notifier:
+  filesystem:
+    filename: /config/notification.txt
+#  smtp:
+#    username: <your-user@your-email-domain.org>
+#    password: <your-user-email-password-for-smtp>
+#    host: <your-email-host-url-or-ip>
+#    port: <your-email-port-for-smtp>  # 25 non-ssl, 443 ssl, 587 tls
+#    sender: <sender@your-email-domain.org>
+#    subject: "[Authelia] {title}"
+#    disable_require_tls: false # set to true if your domain uses no tls or ssl only
+#    disable_html_emails: false # set to true if you don't want html in your emails
+#    tls:
+#      server_name: <your-email-host-url-or-ip>
+#      skip_verify: false
+#      minimum_version: TLS1.2
+
+ntp:
+  ## NTP server address.
+  address: "time.cloudflare.com:123"
+
+  ## NTP version.
+  version: 4
+
+  ## Maximum allowed time offset between the host and the NTP server.
+  max_desync: 3s
+
+  ## Disables the NTP check on startup entirely. This means Authelia will not contact a remote service at all if you
+  ## set this to true, and can operate in a truly offline mode.
+  disable_startup_check: false
+
+  ## The default of false will prevent startup only if we can contact the NTP server and the time is out of sync with
+  ## the NTP server more than the configured max_desync. If you set this to true, an error will be logged but startup
+  ## will continue regardless of results.
+  disable_failure: false
+
+```
+
+
+## Create user 
+
+`nano /mnt/dietpi_userdata/Authelia/config/users_database.yml`
+
+Generate password replace `mysecretpass` with your password
+
+```
+$ echo `sudo docker run authelia/authelia:latest authelia hash-password 'mysecretpass' | awk '{print $3}''Your new Password Here'`
+$argon2id$v=19$m=65536,t=1,p=8$M2RWN1JiZjQyT0hkdGl0Uw$qXUbJJW3e4Z+G4mrslQC27mW4+2Kfgj0F3won2cRUOc
+```
+
+The following file has a user `sampleuser`
+
+Copy and replace generated password in the field `password`
+
+```
+###############################################################
+#                         Users Database                      #
+###############################################################
+
+# This file can be used if you do not have an LDAP set up.
+
+# List of users
+users:
+  sampleuser:
+    displayname: "Authelia User"
+    # Password is authelia
+    password: "$argon2id$v=19$m=65536,t=1,p=8$M2RWN1JiZjQyT0hkdGl0Uw$qXUbJJW3e4Z+G4mrslQC27mW4+2Kfgj0F3won2cRUOc"  # yamllint disable-line rule:line-length
+    email: authelia@authelia.com
+    groups:
+      - admins
+      - dev
+```
+
+
+
+## Create a stack 
+
+```
+version: '3.3'
+services:
+  authelia:
+    image: authelia/authelia
+    container_name: authelia_main
+    volumes:
+      - /mnt/dietpi_userdata/Authelia/config:/config
+    #ports:
+    #  - 9091:9091
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    environment:
+      - TZ=Asia/Kolkata
+    depends_on:
+      - redis
+    networks:
+      - traefik-public
+      - default
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.authelia.rule=Host(`login.lan.siddhu.dev`)'
+      - 'traefik.http.routers.authelia.entrypoints=websecure'
+      - "traefik.http.routers.authelia.tls.certresolver=letsencrypt"
+      - 'traefik.http.routers.authelia.tls=true'
+      - "traefik.docker.network=traefik-public"
+      - 'traefik.http.services.authelia.loadbalancer.server.port=9091'
+      - 'traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://login.lan.siddhu.dev/'
+      - 'traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true'
+      - 'traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User, Remote-Groups, Remote-Name, Remote-Email'
+      - 'traefik.http.middlewares.authelia-basic.forwardauth.address=http://authelia:9091/api/verify?auth=basic'
+      - 'traefik.http.middlewares.authelia-basic.forwardauth.trustForwardHeader=true'
+      - 'traefik.http.middlewares.authelia-basic.forwardauth.authResponseHeaders=Remote-User, Remote-Groups, Remote-Name, Remote-Email'
+
+  redis:
+    image: redis:alpine
+    container_name: authelia_redis
+    volumes:
+      - /mnt/dietpi_userdata/Authelia/redis:/data
+    expose:
+      - 6379
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Kolkata
+    networks:
+      - default
+networks:
+  default:
+    driver: bridge
+  traefik-public:
+    external: true
+```
+
+In just a few seconds you can see it in the dashboard
+
+![Traefik Dashboard](images/traefik-dash-authelia-1.jpg)
+
+
+## Naviate to your login URL 
+
+`https://login.lan.siddhu.dev/`
+
+![Traefik Dashboard](images/authelia-login.jpg)
+
+Try loggin in , if everything gone well you will see the screen below.
+
+![Traefik Dashboard](images/authelia-login-complete.jpg)
