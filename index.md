@@ -37,7 +37,7 @@ For more details see [Basic writing and formatting syntax](https://docs.github.c
 ## Creating a new tutorial
 A quick how-to for writing a new tutorial. 
 - Step 1: Find the appropriate subdirectory to place it, create one if it doesn't exist already (see instructions below).
-- Step 2: If you have multiple resources for a tutorial (eg images, videos, YAML files), then create a folder for the same. You will create a markdown file in this folder. If the above isn't hold, you can just create a new file in the parent folder.
+- Step 2: Create a folder for your tutorial. You will use this folder to place all resources (images / YAML files etc.). Create a markdown file in this folder (maybe with the same name as folder). 
 - Step 3: Create the documentation using markdown. 
 - Step 4: Linking the doc in the navigation bar. Add the following to the top of your file. You can find the <ParentName> by going to the directory and looking for `index.md` file.
 ```
