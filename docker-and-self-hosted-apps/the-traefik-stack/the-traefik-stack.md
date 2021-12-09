@@ -487,15 +487,84 @@ networks:
 
 In just a few seconds you can see it in the dashboard
 
-![Traefik Dashboard](images/traefik-dash-authelia-1.jpg)
+![Traefik Authelia Dashboard](images/traefik-dash-authelia-1.jpg)
 
 
 ## Naviate to your login URL 
 
 `https://login.lan.siddhu.dev/`
 
-![Traefik Dashboard](images/authelia-login.jpg)
+![Authelia Login](images/authelia-login.jpg)
 
 Try loggin in , if everything gone well you will see the screen below.
 
-![Traefik Dashboard](images/authelia-login-complete.jpg)
+![Authelia Login Complete](images/authelia-login-complete.jpg)
+
+
+## Integrating Docker + Authelia to existing stacks 
+
+Here is simple dozzle docker which lets you analyse the logs , it does not come with any login.
+
+````
+version: "3"
+services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    #ports:
+     # - 9999:8080
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.lan.siddhu.dev`)"
+      - "traefik.http.routers.dozzle.entrypoints=websecure"
+      - "traefik.http.routers.dozzle.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dozzle.tls=true"
+      - "traefik.http.routers.dozzle.middlewares=authelia@docker"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      - "traefik.docker.network=traefik-public"
+    restart: unless-stopped
+    networks:
+      - traefik-public
+networks:
+  traefik-public:
+    external: true
+````
+
+After few seconds it will show on the traefik dashboard 
+
+Then you can access `https://dozzle.lan.siddhu.dev`
+
+![Traefik Dashboard](images/dozzle-login.jpg)
+
+After login
+
+![Traefik Dashboard](images/dozzle-after-login.jpg)
+
+
+
+## For every new server you must add lavel and network under container
+
+```
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.lan.siddhu.dev`)"
+      - "traefik.http.routers.dozzle.entrypoints=websecure"
+      - "traefik.http.routers.dozzle.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dozzle.tls=true"
+      - "traefik.http.routers.dozzle.middlewares=authelia@docker"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      - "traefik.docker.network=traefik-public"
+
+    networks:
+      - traefik-public
+```
+
+And network under service 
+
+```
+networks:
+  traefik-public:
+    external: true
+```
