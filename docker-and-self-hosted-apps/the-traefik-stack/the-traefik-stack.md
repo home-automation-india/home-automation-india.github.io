@@ -124,7 +124,6 @@ providers:
     endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
   file:
-    filename: "traefik.yml"
     directory: "/etc/traefik"
     watch: true
 
