@@ -2,7 +2,16 @@
 parent: Docker
 ---
 
-# The Traefik Docker Stack
+# The Traefik - Authelia Docker SSO Stack
+
+# Navigation Structure
+{: .no_toc }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
 
 ## What is Traefik?
 
@@ -22,7 +31,7 @@ Authelia is an open-source authentication and authorization server protecting mo
 
 ![Authelia Screenshot](images/authelia-archi.png "Authelia Screenshot")
 
-## What does it do  ?
+## What does it do?
 
 Enable your users to login once and access everything.
 
@@ -30,9 +39,9 @@ Enable your users to login once and access everything.
 
 # Basics
 
-## Traefik Basics
+## Traefik Providers				
 
-Trafic supports different types of providers to supply configuration to it. We are using [Docker provider](https://doc.traefik.io/traefik/providers/docker/) and [File provider](https://doc.traefik.io/traefik/providers/file/) here.
+Traefik supports different types of providers to supply configuration to it. We are using [Docker provider](https://doc.traefik.io/traefik/providers/docker/) and [File provider](https://doc.traefik.io/traefik/providers/file/) here.
 
 ### Docker Provider 
 
@@ -40,11 +49,11 @@ It is used to configure our proxy through Docker labels.
 
 ### File Provider
 
-Since Docker provider does not support proxying external URLs we are using file provider.
+Since Docker provider does not support proxying external URLs we are using the file provider.
 
 ## Prerequisite
 
- - A Mechine with `docker` and `docker-compose` installed
+ - A Machine with `docker` and `docker-compose` installed
  - Cloudflare account (Optional).
  - Portainer (Optional)
  - Running Home Assistant Docker stack
@@ -57,7 +66,7 @@ Since Docker provider does not support proxying external URLs we are using file 
  - Orico Enclosure USB3.1 Gen 2 [Amazon](https://www.amazon.in/ORICO-External-Drive-Enclosure-Type-C/dp/B07RM4HLFH/) 
  - Connected via Ethernet
 
-# Installation 
+# Traefik Installation 
 
 My storage location will be `/mnt/dietpi_userdata/traefik`
 
@@ -228,7 +237,7 @@ Open the url traefik.lan.siddhu.dev in browser, it may throw SSL error for few m
 
 If everything goes well procced to next step
 
-# Adding Authelia
+# Authelia Installation
 
 Authelia configs will be stored at `/mnt/dietpi_userdata/Authelia/config`
 
@@ -240,7 +249,7 @@ Here we are creating 2 middlwares
 
 `authelia-basic` will use used for http auth (The good old login prompt).
 
-## Installtion
+## Installation
 
 `mkdir -p /mnt/dietpi_userdata/Authelia/config`
 
