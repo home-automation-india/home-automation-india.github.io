@@ -552,7 +552,7 @@ After login
 
 
 
-## For every new server you must add lavel and network under container
+## For every new server you must add label and network under container
 
 ```
     labels:
