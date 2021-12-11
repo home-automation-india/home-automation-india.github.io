@@ -16,3 +16,6 @@ To disable inadvertent device reset due to long press of a 'Button'.
 
 `Timezone +05:30`
 To set Tasmota time to IST.
+
+`SO56 1`
+Wi-Fi network scan to select strongest signal on device restart (network has to be visible).
