@@ -1,3 +1,8 @@
+---
+parent: Tasmota
+title: Basic Setups and SetOptions
+---
+
 After setting up Tasmota on a fresh device, the following SetOptions (SO) may be considered;
 
 Usage: SO<XX> 1 to activate and SO<XX> 0 to deactivate
