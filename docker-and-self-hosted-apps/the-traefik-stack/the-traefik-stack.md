@@ -21,7 +21,7 @@ The simplest, most comprehensive cloud-native stack to help enterprises manage t
 
 ![Traefik Screenshot](images/traefik-architecture.png "Traefik Screenshot")
 
-## Why should I use it?
+## Why should you use it?
 
 If you want to run several containers on a single server and have more than one of them respond to web traffic, you have to use a reverse proxy like Traefik.
 
