@@ -1,6 +1,5 @@
 ---
 parent: Tasmota
-title: Basic Settings and SetOptions
 ---
 ## Basic Settings and Setoptions
 
