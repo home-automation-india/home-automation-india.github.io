@@ -1,6 +1,6 @@
 ---
 has_children: true
-title: tasmota
+title: Tasmota
 ---
 
 All Tasmota related posts
