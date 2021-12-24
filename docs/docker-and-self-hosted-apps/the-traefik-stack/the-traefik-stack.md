@@ -1,17 +1,4 @@
----
-parent: Docker
----
-
 # The Traefik - Authelia Docker SSO Stack
-
-# Navigation Structure
-{: .no_toc }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
 
 ## What is Traefik?
 
