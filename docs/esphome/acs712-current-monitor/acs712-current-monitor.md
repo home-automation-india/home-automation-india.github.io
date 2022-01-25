@@ -71,7 +71,7 @@ esphome:
     - RunningStatistics.cpp
     - acs_trms.h
     
-sensors:
+sensor:
   - platform: custom
     lambda: |-
       auto my_sensor_rms = new MyTRMSSensor();
