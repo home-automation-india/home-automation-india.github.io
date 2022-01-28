@@ -16,3 +16,11 @@ However, note that buying one is significantly more expensive than creating one,
 Buy link: https://veerobot.com/tsal4400-high-power-ir-emitter?search=Tsal&description=true
 You can possibly have multiple IR LEDs that are pointing in all directions but you really don't need them for most rooms if you use the above ones. **Important**: You should never place your LEDs close to each other since they can interfere and end up screwing the signal. Use the viewing angle from the datasheet to make a decision.  
 - (Optional) 1738 TSOP to be able to intercept signals from normal remotes so that your smart systems always know about the current state. This isn't really necessary but a good to have. Note that you can achieve the same using an IR receiever rather than a TSOP but a TSOP is significantly less error prone and does filtering for you so no reason to not use one. 
+
+## Circuit
+The maximum current drawn from an ESP pin is of the order of 10mA. While you can drive an IR LED with this current, you are going to get the highest range only when you drive your LEDs with current of the order of ~100mA. 
+
+You can easily use a transistor 2N2222 the IR LED (in series with a resistor). You can calculate the resistor value by using the voltage drop of the IR Led. eg If your IR LED has a voltage drop of 1.2V and your source voltage is 5V, then your resistor should have a voltage drop of 3.8V. You can then calculate the R value using the desired current. For 100mA, you would need a resistor of 38 ohm. 
+
+## Software
+I use ESPHome to encode all switches using the [IR component](https://esphome.io/components/remote_transmitter.html) but you can potentially use something more generic like [Tasmota IR blaster](https://tasmota.github.io/docs/IR-Remote/) 
