@@ -1,17 +1,4 @@
----
-parent: Docker
----
-
 # The Traefik - Authelia Docker SSO Stack
-
-# Navigation Structure
-{: .no_toc }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
 
 ## What is Traefik?
 
@@ -25,21 +12,21 @@ The simplest, most comprehensive cloud-native stack to help enterprises manage t
 
 If you want to run several containers on a single server and have more than one of them respond to web traffic, you have to use a reverse proxy like Traefik.
 
-# Basics
+## Basics
 
-## Traefik Providers				
+### Traefik Providers				
 
 Traefik supports different types of providers to supply configuration to it. We are using [Docker provider](https://doc.traefik.io/traefik/providers/docker/) and [File provider](https://doc.traefik.io/traefik/providers/file/) here.
 
-### Docker Provider 
+#### Docker Provider 
 
 It is used to configure our proxy through Docker labels.
 
-### File Provider
+#### File Provider
 
 Since Docker provider does not support proxying external URLs we are using the file provider.
 
-## Prerequisite
+### Prerequisite
 
  - A Machine with `docker` and `docker-compose` installed
  - Cloudflare account (Optional).
@@ -47,19 +34,19 @@ Since Docker provider does not support proxying external URLs we are using the f
  - Running Home Assistant Docker stack
  - Lots of patience
 
-## My setup
+### My setup
 
  - Raspberry Pi 4 - 4G running [DietPi](https://dietpi.com/)
  - WD Green 240 GB SSD Connected [Amazon](https://www.amazon.in/Western-Digital-WDS240G2G0A-240GB-Internal/dp/B076Y374ZH)
  - Orico Enclosure USB3.1 Gen 2 [Amazon](https://www.amazon.in/ORICO-External-Drive-Enclosure-Type-C/dp/B07RM4HLFH/) 
  - Connected via Ethernet
 
-# Traefik Installation 
+## Traefik Installation 
 
 My storage location will be `/mnt/dietpi_userdata/traefik`
 
 The domain I will be using is `lan.siddhu.dev`
-## Get CloudFlare token
+### Get CloudFlare token
 
 Login to CloudFlare
 
@@ -69,7 +56,7 @@ Login to CloudFlare
  - Complete captcha if shown.
  - Copy the key to use with stack below.
 
-## Create a dedicated network for connecting all containers and stacks
+### Create a dedicated network for connecting all containers and stacks
 
 ```shell
 $ sudo docker network create --driver=bridge --attachable traefik-public
@@ -78,7 +65,7 @@ $ sudo docker network create --driver=bridge --attachable traefik-public
 
 You can create a network in Portainer from `Networks -> Add Network`, Select Driver Bridge, and turn on `Enable manual container attachment`
 
-## Create Traefik stack 
+### Create Traefik stack 
 
 Important Notes:
 
@@ -97,7 +84,7 @@ Important Notes:
 
 - In Dynamic Configuration `local-ip` should be replaced with your Raspberry Pi / VM IP, this once is used for proxying all the devices running in the docker `host` network. All docker containers are configured through the Portainer itself.
 
-### Create folders
+#### Create folders
 
 `mkdir -p /mnt/dietpi_userdata/traefik/confs`
 
@@ -216,7 +203,7 @@ networks:
     external: true
 ```
 
-## Check with browser
+### Check with browser
 
 Open the url traefik.lan.siddhu.dev in browser, it may throw SSL error for few minutes. If it happends try after 1 or 2 minutes.
 
@@ -225,7 +212,7 @@ Open the url traefik.lan.siddhu.dev in browser, it may throw SSL error for few m
 If everything goes well procced to next step
 
 
-## Creating a new Proxy with Traefik
+### Creating a new Proxy with Traefik
 
 Dozzle is a log viewer for docker containers. Let deploy one with SSL cert in Treafik
 
@@ -258,7 +245,7 @@ networks:
 
 Within a few seconds it will appear on Traefik dashboard and you can use it with the URL `dozzle.lan.siddhu.dev`
 
-## For every New server you must add labels and networks in container
+### For every New server you must add labels and networks in container
 
 ```
     labels:
