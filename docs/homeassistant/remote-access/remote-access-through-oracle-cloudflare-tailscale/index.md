@@ -464,4 +464,12 @@ This completes the set-up
 Repeat Steps in **Creating Redirections** for each domain. 
 
 You can now access your locally run services from the Internet by entering the configured subdomains. 
+<br/>
+
+For e.g., you will be able to access your Home Assistant installation by typing ``https://ha.mydomain.com``
+<br/>
+
+You should repeat steps in Chapter 6 for every redirection you would like to make. Following this method, you can access any internal services you would like, using your domain and subdomain configurations.
+
+
 
