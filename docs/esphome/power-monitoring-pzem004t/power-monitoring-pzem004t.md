@@ -6,7 +6,7 @@ title: Power Monitoring with PZEM-004T
 ## What is this?
 <br/>
 
-This Do It Yourself system is designed to monitor power consumption (AC). You can use this to monitor your whole house energy consumption, or energy consumptoin in a localised area such as a specific room. 
+This Do It Yourself system is designed to monitor power consumption (AC). You can use this to monitor your whole house energy consumption, or energy consumption in a localised area such as a specific room.
 <br/> 
 
 ## Why Do You Need This?
@@ -27,10 +27,14 @@ Power monitoring has plenty of potential for numerous automations, ranging from 
 ## Preparing PZEM-004T
 <br/>
 
-You need to add a 1K resitor between the 5V and the RX Optocoupler. Referr to this page for more information and a detailed explanation: https://tasmota.github.io/docs/PZEM-0XX/#hardware-connections  
+You need to add a 1K resistor between the 5V and the RX Optocoupler. Refer to this page for more information and a detailed explanation: https://tasmota.github.io/docs/PZEM-0XX/#hardware-connections  
 <br/>
  
 An image for your reference:
+<br/>
+
+![Resistor Fix for PZEM-004T](../power-monitoring-pzem004t/images/pzem004t-fix-back.jpeg "Resistor fix for PZEM-004T")
+<br/>
 
 ## Schematic
 <br/>
@@ -39,20 +43,26 @@ Two schematics are included. One for ESP8266 and the second one for ESP32. I rec
 <br/>
 
 **ESP8266**
+<br/>
 
+![ESP8266 Schematic for PZEM-004T](../power-monitoring-pzem004t/images/pzem004t-esp8266-schematic.png "ESP8266 Schematic for PZEM-004T")
 <br/>
 
 **ESP32 Version**
+<br/>
 
+![ESP32 Schematic for PZEM-004T](../power-monitoring-pzem004t/images/pzem-esp32-schematic.png "ESP32 Schematic for PZEM-004T")
 <br/>
 
 **Reference Connection Diagram using D1 Mini**
+<br/>
 
+![PZEM-004T Reference Diagram using ESP8266](../power-monitoring-pzem004t/images/pzem004t-esp8266-diagram.png "PZEM-004T Reference Diagram using ESP8266")
 <br/>
 
 You can see that the configuration here connects 5V on the PZEM-004T to the 3V pin on the D1 mini. In short, we are supplying the PZEM-004T with 3.3V, for optimum operation.
+<br/>
 
- 
 
 ## ESPHome Configuration
 <br/>
@@ -74,22 +84,22 @@ modbus:
 sensor:
   - platform: pzemac
     current:
-      name: "Electricty Current"
+      name: "Electricity  Current"
     voltage:
-      name: "Electricty Voltage"
+      name: "Electricity Voltage"
     energy:
-      name: "Electricty Energy"
+      name: "Electricity Energy"
     power:
-      name: "Electricty Power"
+      name: "Electricity Power"
       id: w
     frequency:
-      name: "Electricty Frequency"
+      name: "Electricity Frequency"
     power_factor:
-      name: "Electricty Power Factor"
+      name: "Electricity Power Factor"
     update_interval: 2s
 
   - platform: total_daily_energy # Converting energy from W to kwh
-    name: "Electricty Energy kwh"
+    name: "Electricity Energy kwh"
     power_id: w
     filters:
         # Multiplication factor from W to kW is 0.001
@@ -103,7 +113,7 @@ sensor:
 > :warning: **NOTE**: As absurd as it sounds, some PZEM-004T versions were observed to have their TX and RX switched, despite what it says on the sensor/board. So, if the RX/TX pin configuration is not working, try swapping these pins within the software (ESPHOME). e.g., you can set rx_pin to GPIO1, and tx_pin to GPIO3
 <br/>
 
-Bellow is an example for **ESP8266**.
+Below is an example for **ESP8266**.
 <br/>
 
 ```
@@ -117,22 +127,22 @@ modbus:
 sensor:
   - platform: pzemac
     current:
-      name: "Electricty Current"
+      name: "Electricity Current"
     voltage:
-      name: "Electricty Voltage"
+      name: "Electricity Voltage"
     energy:
-      name: "Electricty Energy"
+      name: "Electricity Energy"
     power:
-      name: "Electricty Power"
+      name: "Electricity Power"
       id: w
     frequency:
-      name: "Electricty Frequency"
+      name: "Electricity Frequency"
     power_factor:
-      name: "Electricty Power Factor"
+      name: "Electricity Power Factor"
     update_interval: 2s
 
   - platform: total_daily_energy # Converting energy from W to kwh
-    name: "Electricty Energy kwh"
+    name: "Electricity Energy kwh"
     power_id: w
     filters:
         # Multiplication factor from W to kW is 0.001
@@ -146,12 +156,21 @@ sensor:
 Now, make sure it is connected and communicating with Home Assistant. 
 <br/>
 
+In order to monitor electricity consumption, the CT Sensor on the PZEM-004T must be connected to the **NEUTRAL** wire of the load.
+<br/>
+
+![PZEM-004T CT Sensor Connection](../power-monitoring-pzem004t/images/pzem-004t-ct-type.png "PZEM-004T CT Sensor Neutral Wire Connection")
+<br/>
+
 ## Home Assistant Configuration for Energy
 <br/>
 
-As we are already convering energy in w to kwh within the ESPHome node, it is possible for us to directly bring this to Home Assistant, by using the ``utility_meter`` integration (https://www.home-assistant.io/integrations/utility_meter/)
+As we are already converting energy in w to kwh within the ESPHome node, it is possible for us to directly bring this to Home Assistant, by using the ``utility_meter`` integration (https://www.home-assistant.io/integrations/utility_meter/)
 <br/>
- 
+
+The Home Assistant Energy configuration only takes ``kwh`` values. In the ESPHome code example, we already configured an additional sensor to convert ``w`` values to ``kwh``. Now, using the ``Utility Meter`` integration, we will add this Home Assistant Energy Configuration. 
+<br/>
+
 Example configuration entry in ``configuration.yaml``.
 <br/>
 
@@ -172,21 +191,26 @@ Under Electricity Grid, click on Add Consumption. Choose your entity, which is `
 <br/>
 
 ![Home Assistant Energy Configuration](../power-monitoring-pzem004t/images/home-assistant-energy-config.png "Home Assistant Energy Configuration")
+<br/>
 
 Click Save. 
+<br/>
 
 > ❕ **NOTE**: It may take some time for the electricity_energy_kwh to popup in the energy configuration. 
+<br/>
 
 > ❕ After adding the configuration, it may take up to 1-2 hours for energy data to pop up on the energy dash board. 
 <br/>
  
 
-If you would like to go deeper in this, there is a detailed discussion page - On Tasmota Github!
+If you would like to go deeper on using PZEM-004T and its use-cases, there is a detailed discussion page - On Tasmota Github!
+<br/>
 
 https://github.com/arendst/Tasmota/discussions/10567
 <br/>
 
 You can buy PZEM-004T from:
+<br/>
 https://www.techtonics.in/peacefair-pzem-004t-ac-multi-function-electric-energy-metering-power-monitor
 https://robu.in/product/pzem-004t-multi-function-ac-power-monitor-module/
 Or try Banggood
