@@ -1,4 +1,5 @@
 site_name: Home Automation IN
+site_url: https://home-automation-india.github.io/
 theme:
   name: material
   features:
